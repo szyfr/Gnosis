@@ -7,7 +7,7 @@
 
 //= Imports
 use super::enums;
-use std::{ffi::c_void, borrow::BorrowMut};
+use std::{ffi::c_void, borrow::BorrowMut, ops::Add};
 
 
 //= Structures
@@ -25,6 +25,17 @@ pub struct Vector3 {
 	pub x: f32,
 	pub y: f32,
 	pub z: f32,
+}
+impl Add for Vector3 {
+    type Output = Vector3;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        return Vector3{
+			x: self.x + rhs.x,
+			y: self.y + rhs.y,
+			z: self.z + rhs.z,
+		}
+    }
 }
 
 /// Vector4 type
