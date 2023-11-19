@@ -4,7 +4,7 @@
 
 
 //= Imports
-use gnosis::{raylib, units::player};
+use gnosis::raylib;
 
 
 //= Procedures
@@ -15,11 +15,8 @@ fn main() {
 	raylib::init_window(1280,720,"Gnosis");
 	raylib::set_target_fps(80);
 
-	let player = player::create_player();
-
 	while !raylib::window_should_close() {
 		//* Update */
-		player.update();
 
 		//* Draw */
 		raylib::begin_drawing();
