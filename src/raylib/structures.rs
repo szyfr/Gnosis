@@ -7,35 +7,178 @@
 
 //= Imports
 use super::enums;
-use std::{ffi::c_void, borrow::BorrowMut, ops::Add};
+use std::{ffi::c_void, borrow::BorrowMut, ops::{Sub, Mul, Add}, fmt::Display};
 
 
 //= Structures
 
 /// Vector2 type
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Vector2 {
 	pub x: f32,
 	pub y: f32,
 }
+impl Sub for Vector2 {
+	type Output = Self;
+
+	fn sub(self, rhs: Self) -> Self::Output {
+		Self {
+			x: self.x - rhs.x,
+			y: self.y - rhs.y,
+		}
+	}
+}
+impl Add for Vector2 {
+	type Output = Self;
+
+	fn add(self, rhs: Self) -> Self::Output {
+		Self {
+			x: self.x + rhs.x,
+			y: self.y + rhs.y,
+		}
+	}
+}
+impl Mul<f32> for Vector2 {
+    type Output = Self;
+
+	fn mul(self, rhs: f32) -> Self::Output {
+		Self {
+			x: self.x * rhs,
+			y: self.y * rhs,
+		}
+	}
+}
+impl Display for Vector2 {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		return write!(f, "[{},{}]",self.x, self.y);
+	}
+}
+impl From<raylib_ffi::Vector2> for Vector2 {
+	fn from(value: raylib_ffi::Vector2) -> Self {
+		Self {
+			x: value.x,
+			y: value.y,
+		}
+	}
+}
+impl From<[i32;2]> for Vector2 {
+	fn from(value: [i32;2]) -> Self {
+		Self {
+			x: value[0] as f32,
+			y: value[1] as f32,
+		}
+	}
+}
+impl From<[f32;2]> for Vector2 {
+	fn from(value: [f32;2]) -> Self {
+		Self {
+			x: value[0],
+			y: value[1],
+		}
+	}
+}
+impl Into<raylib_ffi::Vector2> for Vector2 {
+	fn into(self) -> raylib_ffi::Vector2 {
+		return raylib_ffi::Vector2 { x: self.x, y: self.y };
+	}
+}
+impl Into<[i32;2]> for Vector2 {
+	fn into(self) -> [i32;2] {
+		return [self.x as i32, self.y as i32];
+	}
+}
+impl Into<[f32;2]> for Vector2 {
+	fn into(self) -> [f32;2] {
+		return [self.x, self.y];
+	}
+}
 
 /// Vector3 type
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Vector3 {
 	pub x: f32,
 	pub y: f32,
 	pub z: f32,
 }
-impl Add for Vector3 {
-    type Output = Vector3;
+impl Sub for Vector3 {
+	type Output = Self;
 
-    fn add(self, rhs: Self) -> Self::Output {
-        return Vector3{
+	fn sub(self, rhs: Self) -> Self::Output {
+		Self {
+			x: self.x - rhs.x,
+			y: self.y - rhs.y,
+			z: self.z - rhs.z,
+		}
+	}
+}
+impl Add for Vector3 {
+	type Output = Self;
+
+	fn add(self, rhs: Self) -> Self::Output {
+		Self {
 			x: self.x + rhs.x,
 			y: self.y + rhs.y,
 			z: self.z + rhs.z,
 		}
-    }
+	}
+}
+impl Mul<f32> for Vector3 {
+    type Output = Self;
+
+	fn mul(self, rhs: f32) -> Self::Output {
+		Self {
+			x: self.x * rhs,
+			y: self.y * rhs,
+			z: self.z * rhs,
+		}
+	}
+}
+impl Display for Vector3 {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		return write!(f, "[{},{},{}]",self.x, self.y, self.z);
+	}
+}
+impl From<raylib_ffi::Vector3> for Vector3 {
+	fn from(value: raylib_ffi::Vector3) -> Self {
+		Self {
+			x: value.x,
+			y: value.y,
+			z: value.z,
+		}
+	}
+}
+impl From<[i32;3]> for Vector3 {
+	fn from(value: [i32;3]) -> Self {
+		Self {
+			x: value[0] as f32,
+			y: value[1] as f32,
+			z: value[2] as f32,
+		}
+	}
+}
+impl From<[f32;3]> for Vector3 {
+	fn from(value: [f32;3]) -> Self {
+		Self {
+			x: value[0],
+			y: value[1],
+			z: value[2],
+		}
+	}
+}
+impl Into<raylib_ffi::Vector3> for Vector3 {
+	fn into(self) -> raylib_ffi::Vector3 {
+		return raylib_ffi::Vector3 { x: self.x, y: self.y, z: self.z };
+	}
+}
+impl Into<[i32;3]> for Vector3 {
+	fn into(self) -> [i32;3] {
+		return [self.x as i32, self.y as i32, self.z as i32];
+	}
+}
+impl Into<[f32;3]> for Vector3 {
+	fn into(self) -> [f32;3] {
+		return [self.x, self.y, self.z];
+	}
 }
 
 /// Vector4 type
@@ -57,6 +200,7 @@ pub struct Quaternion {
 }
 
 /// Matrix, 4x4 components, column major, OpenGL style, right handed
+#[derive(Clone)]
 pub struct Matrix {
 	pub m0: f32, pub m4: f32, pub  m8: f32, pub m12: f32, //* Matrix first row  (4 components)
 	pub m1: f32, pub m5: f32, pub  m9: f32, pub m13: f32, //* Matrix second row (4 components)
@@ -71,6 +215,11 @@ pub struct Rectangle {
 	pub y: f32,			//* Rectangle top-left corner position y
 	pub width: f32,		//* Rectangle width
 	pub height: f32,	//* Rectangle height
+}
+impl ToString for Rectangle {
+    fn to_string(&self) -> String {
+    	return "[".to_string() + &self.x.to_string() + "," + &self.y.to_string() + "," + &self.width.to_string() + "," + &self.height.to_string() + "]"
+    }
 }
 
 /// Color, 4 components, R8G8B8A8 (32bit)
@@ -124,6 +273,15 @@ pub struct Font {
 	pub recs: *mut raylib_ffi::Rectangle,
 	pub chars: *mut raylib_ffi::GlyphInfo,
 }
+impl ToString for Font {
+    fn to_string(&self) -> String {
+		unsafe {
+			let rect = Rectangle::from_ffi(*self.recs);
+			let str = "[".to_string() + &rect.to_string() + " : ]";
+    		return str;
+		}
+    }
+}
 
 /// Shader type (generic)
 pub struct Shader {
@@ -153,6 +311,7 @@ pub struct Transform {
 }
 
 /// Model type
+#[derive(Clone)]
 pub struct Model {
 	pub transform: Matrix,
 
@@ -178,11 +337,6 @@ impl Vector2 {
 		return Vector2 { x: 0.0, y: 0.0 }
 	}
 
-	/// Converting to raylib_ffi version
-	pub fn to_ffi(&self) -> raylib_ffi::Vector2 {
-		return raylib_ffi::Vector2 { x: self.x, y: self.y };
-	}
-
 }
 
 impl Vector3 {
@@ -192,9 +346,58 @@ impl Vector3 {
 		return Vector3 { x: 0.0, y: 0.0, z: 0.0 }
 	}
 
-	/// Converting to raylib_ffi version
-	pub fn to_ffi(&self) -> raylib_ffi::Vector3 {
-		return raylib_ffi::Vector3 { x: self.x, y: self.y, z: self.z };
+	/// Returns true if the inpout Vector is with offset of the original
+	pub fn close(&self, v2: Self, offset: f32) -> bool {
+		let mut output = true;
+
+		if self.x > v2.x + offset || self.x < v2.x - offset { output = false; }
+		if self.y > v2.y + offset || self.y < v2.y - offset { output = false; }
+		if self.z > v2.z + offset || self.z < v2.z - offset { output = false; }
+		
+		return output;
+	}
+
+	/// Rounds V3
+	pub fn round(&self) -> Self {
+		Self {
+			x: self.x.round(),
+			y: self.y.round(),
+			z: self.z.round(),
+		}
+	}
+
+	/// Returns position of camera rotated around input ``Vector3``.
+	pub fn rotate(&self, dist: Self, rot: f32) -> Self {
+		let mut position = Vector3{x:0.0,y:0.0,z:0.0};
+
+		position.x = dist.x * (rot / 57.3).cos() - dist.z * (rot / 57.3).sin();
+		position.z = dist.x * (rot / 57.3).sin() + dist.z * (rot / 57.3).cos();
+
+		position.x += self.x;
+		position.y  = self.y + dist.y;
+		position.z += self.z;
+
+		return position;
+	}
+
+	/// Creates a binary direction for the difference between two points.
+	pub fn direction_to(&self, v2: Self) -> Self {
+		let difference = v2 - *self;
+		let mut output = Vector3{x:0.0,y:0.0,z:0.0};
+
+		if difference.x  > 0.0 { output.x =  1.0 }
+		if difference.x == 0.0 { output.x =  0.0 }
+		if difference.x  < 0.0 { output.x = -1.0 }
+
+		if difference.y  > 0.0 { output.y =  1.0 }
+		if difference.y == 0.0 { output.y =  0.0 }
+		if difference.y  < 0.0 { output.y = -1.0 }
+
+		if difference.z  > 0.0 { output.z =  1.0 }
+		if difference.z == 0.0 { output.z =  0.0 }
+		if difference.z  < 0.0 { output.z = -1.0 }
+		
+		return output;
 	}
 
 }
@@ -334,6 +537,19 @@ impl Image {
 
 impl Texture {
 
+	/// Create unitialized texture
+	pub fn empty() -> Self {
+		Self {
+			id:			0,
+			width:		0,
+			height:		0,
+			mipmaps:	0,
+			format:		enums::PixelFormat::Unknown,
+			origin:		Vector2::zero(),
+			tint:		raylib_ffi::colors::WHITE,
+		}
+	}
+
 	/// Loading Image
 	pub fn load(fileName: &str) -> Self {
 		unsafe {
@@ -358,7 +574,7 @@ impl Texture {
 	/// Draw texture using raylib_ffi::DrawTextureV
 	pub fn draw_v(&self, position: Vector2) -> Self {
 		unsafe {
-			raylib_ffi::DrawTextureV(self.to_ffi(), position.to_ffi(), self.tint);
+			raylib_ffi::DrawTextureV(self.to_ffi(), position.into(), self.tint);
 
 			return self.clone();
 		}
@@ -366,7 +582,7 @@ impl Texture {
 	/// Draw texture using raylib_ffi::DrawTextureEX
 	pub fn draw_ex(&self, position: Vector2, rotation: f32, scale: f32) -> Self {
 		unsafe {
-			raylib_ffi::DrawTextureEx(self.to_ffi(), position.to_ffi(), rotation, scale, self.tint);
+			raylib_ffi::DrawTextureEx(self.to_ffi(), position.into(), rotation, scale, self.tint);
 
 			return self.clone();
 		}
@@ -374,7 +590,7 @@ impl Texture {
 	/// Draw texture using raylib_ffi::DrawTextureRec
 	pub fn draw_rec(&self, source: Rectangle, position: Vector2) -> Self {
 		unsafe {
-			raylib_ffi::DrawTextureRec(self.to_ffi(), source.to_ffi(), position.to_ffi(), self.tint);
+			raylib_ffi::DrawTextureRec(self.to_ffi(), source.to_ffi(), position.into(), self.tint);
 
 			return self.clone();
 		}
@@ -382,7 +598,7 @@ impl Texture {
 	/// Draw texture using raylib_ffi::DrawTexturePro
 	pub fn draw_pro(&self, source: Rectangle, dest: Rectangle, rotation: f32) -> Self {
 		unsafe {
-			raylib_ffi::DrawTexturePro(self.to_ffi(), source.to_ffi(), dest.to_ffi(), self.origin.to_ffi(), rotation, self.tint);
+			raylib_ffi::DrawTexturePro(self.to_ffi(), source.to_ffi(), dest.to_ffi(), self.origin.into(), rotation, self.tint);
 
 			return self.clone();
 		}
@@ -403,7 +619,7 @@ impl Texture {
 				bottom:	self.height / 3,
 				layout:	0,
 			};
-			raylib_ffi::DrawTextureNPatch(self.to_ffi(), nPatchInfo, dest.to_ffi(), self.origin.to_ffi(), rotation, self.tint);
+			raylib_ffi::DrawTextureNPatch(self.to_ffi(), nPatchInfo, dest.to_ffi(), self.origin.into(), rotation, self.tint);
 
 			return self.clone();
 		}
@@ -488,8 +704,8 @@ impl Font {
 			raylib_ffi::DrawTextPro(
 				self.to_ffi(),
 				raylib_ffi::rl_str!(text),
-				position.to_ffi(),
-				Vector2::zero().to_ffi(),
+				position.into(),
+				Vector2::zero().into(),
 				rotation,
 				fontSize,
 				spacing,
@@ -533,7 +749,7 @@ impl Model {
 	/// Set material texture
 	pub fn set_material_texture(&mut self, texture: Texture) -> &mut Self {
 		unsafe {
-			//(*self.materials).
+			//Texture::from_ffi((*(*self.materials).maps).texture).unload();
 			raylib_ffi::SetMaterialTexture(self.materials, enums::MaterialMapIndex::ALBEDO as i32, texture.to_ffi());
 		}
 
@@ -545,7 +761,7 @@ impl Model {
 		unsafe {
 			raylib_ffi::DrawModel(
 				self.to_ffi(),
-				position.to_ffi(),
+				position.into(),
 				scale,
 				tint,
 			);
@@ -558,10 +774,10 @@ impl Model {
 		unsafe {
 			raylib_ffi::DrawModelEx(
 				self.to_ffi(),
-				position.to_ffi(),
-				rotationAxis.to_ffi(),
+				position.into(),
+				rotationAxis.into(),
 				rotationAngle,
-				scale.to_ffi(),
+				scale.into(),
 				tint,
 			);
 			return self;

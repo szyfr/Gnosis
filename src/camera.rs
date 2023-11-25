@@ -6,13 +6,24 @@
 
 
 //= Imports
-use crate::raylib::structures::Vector3;
+use crate::raylib::structures::Vector2;
 
 
 //= Structures
+#[derive(Clone, Copy)]
 pub struct Camera {
-	pub position: Vector3,
-	pub rotation: f32,
+	pub position: Vector2,
+	pub zoom: f32,
+}
+impl Into<raylib_ffi::Camera2D> for Camera {
+	fn into(self) -> raylib_ffi::Camera2D {
+		return raylib_ffi::Camera2D {
+			offset: Vector2::zero().into(),
+			target: self.position.into(),
+			rotation: 0.0,
+			zoom: self.zoom,
+		}
+	}
 }
 
 
@@ -20,23 +31,27 @@ pub struct Camera {
 
 impl Camera {
 
+	/// New Camera
+	pub fn new() -> Self {
+		Self {
+			position: Vector2::zero(),
+			zoom: 5.0,
+		}
+	}
+
 	/// Begin drawing using raylib_ffi::BeginMode3D
 	pub fn begin_drawing(&self) {
-		unsafe { raylib_ffi::BeginMode3D(self.to_ffi()) }
+		unsafe {
+			raylib_ffi::BeginDrawing();
+			raylib_ffi::BeginMode2D((*self).into());
+		}
 	}
 	/// End drawing using raylib_ffi::EndMode3D
 	pub fn end_drawing(&self) {
-		unsafe { raylib_ffi::EndMode3D() }
+		unsafe {
+			raylib_ffi::EndMode2D();
+			raylib_ffi::EndDrawing();
+		}
 	}
 
-	/// Converting to raylib_ffi version
-	pub fn to_ffi(&self) -> raylib_ffi::Camera3D {
-		return raylib_ffi::Camera3D {
-			position:	(self.position + Vector3{x: 2.5, y: 5.0, z: 2.5}).to_ffi(),
-			target:		self.position.to_ffi(),
-			up:			raylib_ffi::Vector3 { x: 0.0, y: 1.0, z: 0.0 },
-			fovy:		70.0,
-			projection: raylib_ffi::enums::CameraProjection::Orthographic as i32,
-		};
-	}
 }
