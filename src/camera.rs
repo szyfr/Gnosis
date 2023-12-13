@@ -6,7 +6,7 @@
 
 
 //= Imports
-use crate::raylib::structures::Vector2;
+use crate::raylib::vectors::Vector2;
 
 
 //= Structures
@@ -35,7 +35,7 @@ impl Camera {
 	pub fn new() -> Self {
 		Self {
 			position: Vector2::zero(),
-			zoom: 5.0,
+			zoom: 4.0,
 		}
 	}
 

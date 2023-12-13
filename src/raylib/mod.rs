@@ -6,13 +6,20 @@
 
 
 //= Imports
-//use crate::{data, camera::Camera};
-
 pub mod enums;
-pub mod structures;
+pub mod vectors;
+pub mod matrixes;
+pub mod rectangles;
+pub mod images;
+pub mod textures;
+pub mod fonts;
+pub mod shaders;
+pub mod materials;
+pub mod models;
 
 
 //= Procedures
+
 pub fn begin_drawing() {
 	unsafe { raylib_ffi::BeginDrawing(); }
 }
@@ -32,7 +39,7 @@ pub fn set_trace_log_level( logLevel : raylib_ffi::enums::TraceLogLevel ) {
 	unsafe { raylib_ffi::SetTraceLogLevel(logLevel as i32); }
 }
 
-pub fn init_window(width: i32, height: i32, title: &str ) {
+pub fn init_window(width: i32, height: i32, title: &str) {
 	unsafe {
 		raylib_ffi::InitWindow(
 			width,
@@ -40,6 +47,9 @@ pub fn init_window(width: i32, height: i32, title: &str ) {
 			raylib_ffi::rl_str!(title),
 		);
 	}
+}
+pub fn set_line_spacing(spacing : i32) {
+	unsafe { raylib_ffi::SetTextLineSpacing(spacing); }
 }
 pub fn close_window() {
 	unsafe { raylib_ffi::CloseWindow(); }
@@ -74,19 +84,19 @@ pub fn get_frame_time() -> f32 {
 	unsafe { return raylib_ffi::GetFrameTime(); }
 }
 
-pub fn begin_3d_mode( camera : raylib_ffi::Camera3D ) {
-	unsafe {
-		//let rlCamera = raylib_ffi::Camera3D{
-		//	position:	camera.camPosition,
-		//	target:		camera.position,
-		//	up:			Vector3{x:0.0,y:1.0,z:0.0},
-		//	fovy:		camera.fovy,
-		//	projection:	raylib_ffi::enums::CameraProjection::Perspective as i32,
-		//};
-
-		raylib_ffi::BeginMode3D(camera);
-	}
-}
+//pub fn begin_3d_mode( camera : &Camera ) {
+//	unsafe {
+//		let rlCamera = raylib_ffi::Camera3D{
+//			position:	camera.camPosition.into(),
+//			target:		camera.position.into(),
+//			up:			Vector3{x:0.0,y:1.0,z:0.0}.into(),
+//			fovy:		camera.fovy,
+//			projection:	raylib_ffi::enums::CameraProjection::Perspective as i32,
+//		};
+//
+//		raylib_ffi::BeginMode3D(rlCamera);
+//	}
+//}
 pub fn end_3d_mode() {
 	unsafe { raylib_ffi::EndMode3D(); }
 }
@@ -325,9 +335,6 @@ pub fn set_shader_value(shader: raylib_ffi::Shader, locIndex: i32, value: *const
 	unsafe { raylib_ffi::SetShaderValue(shader, locIndex, value, uniformType as i32) }
 }
 
-pub fn begin_texture_mode(target: raylib_ffi::RenderTexture) {
-	unsafe { raylib_ffi::BeginTextureMode(target) }
-}
 pub fn end_texture_mode() {
 	unsafe { raylib_ffi::EndTextureMode() }
 }

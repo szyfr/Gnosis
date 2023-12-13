@@ -10,7 +10,7 @@
 
 //= Structures
 
-use crate::raylib::structures::{Texture, Vector2};
+use crate::raylib::{textures::Texture, vectors::Vector3};
 
 /// Tile structure
 #[derive(Clone)]
@@ -31,10 +31,10 @@ impl Tile {
 	}
 
 	///
-	pub fn draw(&self, position: Vector2) -> &Self {
+	pub fn draw(&self, position: Vector3) -> &Self {
 		self.texture.draw(
-			(position.x as i32 * 32) + (position.y as i32 * 16),
-			position.y as i32 * 8,
+			(position.x as i32 * 16) - (position.z as i32 * 16),
+			(position.x as i32 *  8) + (position.z as i32 *  8) - (position.y as i32 * 16),
 		);
 
 		return self;

@@ -8,7 +8,7 @@
 use std::collections::HashMap;
 
 //= Imports
-use gnosis::{raylib::{self, structures::{Texture, Vector2}}, camera::Camera, tiles::Tile};
+use gnosis::{raylib::{self, textures::Texture, vectors::Vector3}, camera::Camera, tiles::Tile};
 
 
 //= Procedures
@@ -27,10 +27,15 @@ fn main() {
 	let mut tile = Tile::new();
 	tile.texture = textureTest;
 
-	let mut tiles: HashMap<[i32;2], Tile> = HashMap::new();
-	tiles.insert(Vector2{x:0.0,y:0.0}.into(), tile.clone());
-	tiles.insert(Vector2{x:1.0,y:0.0}.into(), tile.clone());
-	tiles.insert(Vector2{x:0.0,y:1.0}.into(), tile.clone());
+	let mut tiles: HashMap<[i32;3], Tile> = HashMap::new();
+	tiles.insert(Vector3{x:0.0,y:0.0,z:0.0}.into(), tile.clone());
+	tiles.insert(Vector3{x:1.0,y:0.0,z:0.0}.into(), tile.clone());
+	tiles.insert(Vector3{x:0.0,y:1.0,z:0.0}.into(), tile.clone());
+	tiles.insert(Vector3{x:0.0,y:0.0,z:1.0}.into(), tile.clone());
+	tiles.insert(Vector3{x:2.0,y:0.0,z:0.0}.into(), tile.clone());
+	tiles.insert(Vector3{x:3.0,y:0.0,z:0.0}.into(), tile.clone());
+	tiles.insert(Vector3{x:2.0,y:1.0,z:0.0}.into(), tile.clone());
+	tiles.insert(Vector3{x:2.0,y:0.0,z:1.0}.into(), tile.clone());
 
 	while !raylib::window_should_close() {
 		//* Update */
@@ -51,9 +56,19 @@ fn main() {
 		camera.begin_drawing();
 
 		raylib::clear_background(raylib_ffi::Color{r:57,g:57,b:57,a:255});
-		//for y
+
+		for x in -5..5 {
+			for y in -5..5 {
+				for z in -5..5 {
+					if tiles.contains_key(&[x,y,z]) {
+						tile.draw(Vector3::from([x,y,z]));
+					}
+				}
+			}
+		}
+
 		//for (pos, tile) in tiles.iter() {
-		//	tile.draw(Vector2::from(*pos));
+		//	tile.draw(Vector3::from(*pos));
 		//}
 
 		camera.end_drawing();
