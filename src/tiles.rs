@@ -13,9 +13,10 @@
 use crate::raylib::{textures::Texture, vectors::Vector3};
 
 /// Tile structure
-#[derive(Clone)]
+#[derive(Clone,Copy)]
 pub struct Tile {
-	pub texture: Texture,
+	//pub texture: Texture,
+	pub empty: bool,
 }
 
 
@@ -26,7 +27,8 @@ impl Tile {
 	/// Create a new blank tile
 	pub fn new() -> Self {
 		Self {
-			texture: Texture::empty()
+			//texture: Texture::empty(),
+			empty: true,
 		}
 	}
 
