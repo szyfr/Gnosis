@@ -6,7 +6,7 @@
 
 
 //= Imports
-use gnosis::{raylib, camera::Camera, world::World};
+use gnosis::{raylib::{self, vectors::Vector3}, camera::Camera, world::World, graphics::Graphics};
 
 
 //= Procedures
@@ -15,27 +15,12 @@ fn main() {
     //* Raylib */
 	//raylib::set_trace_log_level(raylib_ffi::enums::TraceLogLevel::None);
 	raylib::init_window(1280,720,"Gnosis");
-	raylib::set_target_fps(80);
+	//raylib::set_target_fps(80);
 
+	let graphics = Graphics::new();
 	let mut camera = Camera::new();
 	let mut world = World::new();
 	world.generate_test();
-
-	// TEMP
-	//let textureTest = Texture::load("data/test.png");
-//
-	//let mut tile = Tile::new();
-	//tile.texture = textureTest;
-//
-	//let mut tiles: HashMap<[i32;3], Tile> = HashMap::new();
-	//tiles.insert(Vector3{x:0.0,y:0.0,z:0.0}.into(), tile.clone());
-	//tiles.insert(Vector3{x:1.0,y:0.0,z:0.0}.into(), tile.clone());
-	//tiles.insert(Vector3{x:0.0,y:1.0,z:0.0}.into(), tile.clone());
-	//tiles.insert(Vector3{x:0.0,y:0.0,z:1.0}.into(), tile.clone());
-	//tiles.insert(Vector3{x:2.0,y:0.0,z:0.0}.into(), tile.clone());
-	//tiles.insert(Vector3{x:3.0,y:0.0,z:0.0}.into(), tile.clone());
-	//tiles.insert(Vector3{x:2.0,y:1.0,z:0.0}.into(), tile.clone());
-	//tiles.insert(Vector3{x:2.0,y:0.0,z:1.0}.into(), tile.clone());
 
 	while !raylib::window_should_close() {
 		//* Update */
@@ -51,17 +36,19 @@ fn main() {
 		if raylib::button_down(raylib_ffi::enums::KeyboardKey::S as i32) {
 			camera.position.y += 1.0;
 		}
+		if raylib::button_pressed(raylib_ffi::enums::KeyboardKey::Q as i32) { world.rotation -= 1; }
+		if raylib::button_pressed(raylib_ffi::enums::KeyboardKey::E as i32) { world.rotation += 1; }
+		if world.rotation < 0 { world.rotation = 3; }
+		if world.rotation > 3 { world.rotation = 0; }
 
 		//* Draw */
 		camera.begin_drawing();
 
 		raylib::clear_background(raylib_ffi::Color{r:57,g:57,b:57,a:255});
 
-		//world.draw();
+		world.draw(&graphics, Vector3{x:camera.position.x,y:8.0,z:camera.position.y});
 
-		//for (pos, tile) in tiles.iter() {
-		//	tile.draw(Vector3::from(*pos));
-		//}
+		raylib::draw_fps(0, 0);
 
 		camera.end_drawing();
 	}

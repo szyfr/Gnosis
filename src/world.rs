@@ -5,20 +5,21 @@
 #![allow(dead_code)]
 
 
-use std::collections::HashMap;
-
 //= Imports
-use crate::{tiles::Tile, raylib::{textures::Texture, vectors::Vector3}};
+use std::collections::HashMap;
+use crate::{tiles::Tile, graphics::Graphics, raylib::vectors::Vector3};
 
 
 //= Structures
 
 ///
 pub struct World {
+	pub rotation: i32,
 	pub chunks: HashMap<[i32;3],Chunk>,
 }
 
 ///
+#[derive(Clone)]
 pub struct Chunk([[[Tile;16];16];16]);
 
 
@@ -29,67 +30,67 @@ impl World {
 	/// Create new map
 	pub fn new() -> Self {
 		Self {
+			rotation: 0,
 			chunks: HashMap::new(),
 		}
 	}
 
-	//
-	pub fn draw(&self) {
-		//for x in -5..5 {
-		//	for y in -5..5 {
-		//		for z in -5..5 {
-		//			if self.contains_key(&[x,y,z]) {
-		//				if !(tiles.contains_key(&[x+1,y,z]) && tiles.contains_key(&[x,y+1,z]) && tiles.contains_key(&[x,y,z+1])) {
-		//					tile.draw(Vector3::from([x,y,z]));
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
-		for (position, chunk) in self.chunks.iter() {
+	/// Draw map
+	// TODO also have player position to only draw nearby chunks
+	pub fn draw(&self, graphics: &Graphics, playerPosition: Vector3) {
+		let _positionTile: [i32;3] = playerPosition.into();
+		for (pos, chunk) in self.chunks.iter() {
 			for x in 0..16 {
-				for y in 0..16 {
-					for z in 0..16 {
-						chunk.get_tile([x,y,z]).draw(Vector3::from([x + position[0], y + position[1], z + position[2]]));
+				for z in 0..16 {
+					for y in 0..16 {
+						let position = [(pos[0] * 16) + (x as i32), (pos[1] * 16) + (y as i32), (pos[2] * 16) + (z as i32),];
+						if !chunk.0[x][y][z].is_empty() && chunk.tile_should_draw([x as i32,y as i32,z as i32]) { graphics.draw_tile(chunk.0[x][y][z], position, self.rotation); }
 					}
 				}
 			}
 		}
+		// TODO next
+		//for chunkX in positionTile[0]-2..positionTile[0]+2 {
+		//	for x in 0..16 {
+		//		for z in 0..16 {
+		//			for y in 0..16 {
+		//				let position = [(pos[0] * 16) + (x as i32), (pos[1] * 16) + (y as i32), (pos[2] * 16) + (z as i32),];
+		//				if !chunk.0[x][y][z].is_empty() && chunk.tile_should_draw([x as i32,y as i32,z as i32]) { graphics.draw_tile(chunk.0[x][y][z], position, self.rotation); }
+		//			}
+		//		}
+		//	}
+		//}
 	}
 
-	//
 	pub fn generate_test(&mut self) {
-		self.chunks.insert([0,0,0], Chunk::generate_test());
+		let mut chunk = [[[Tile::Empty;16];16];16];
+		let chunkbody = [[[Tile::Test;16];16];16];
+
+		for x in 0..16 {
+			for y in 0..8 {
+				for z in 0..16 {
+					chunk[x][y][z] = Tile::Test;
+				}
+			}
+		}
+		chunk[0][8][0] = Tile::Test;
+
+		self.chunks.insert([-1, 0,0], Chunk(chunk).clone());
+		self.chunks.insert([ 0, 0,0], Chunk(chunk).clone());
+		self.chunks.insert([ 1, 0,0], Chunk(chunk).clone());
+		self.chunks.insert([ 0,-1,0], Chunk(chunkbody).clone());
 	}
 
 }
 
 impl Chunk {
 
-	pub fn generate_test() -> Self {
-		let mut result = Self::new();
-		//for x in 0..16 {
-		//	for y in 0..8 {
-		//		for z in 0..16 {
-		//			result.0[x as usize][y as usize][z as usize].empty = false;
-		//		}
-		//	}
-		//}
-		return result;
-	}
-
-	pub fn new() -> Self {
-		let textureTest = Texture::load("data/test.png");
-
-		let mut tile = Tile::new();
-		tile.texture = textureTest;
-
-		return Self([[[tile.clone();16];16];16]);
-	}
-
-	//
-	pub fn get_tile(&self, position: [i32;3]) -> Tile {
-		return self.0[position[0] as usize][position[1] as usize][position[2] as usize].clone();
+	pub fn tile_should_draw(&self, position: [i32;3]) -> bool {
+		if position[0] == 15 || position[1] == 15 || position[2] == 15 { return true }
+		return
+			self.0[(position[0]+1) as usize][position[1] as usize][position[2] as usize].is_empty() ||
+			self.0[position[0] as usize][(position[1]+1) as usize][position[2] as usize].is_empty() ||
+			self.0[position[0] as usize][position[1] as usize][(position[2]+1) as usize].is_empty();
 	}
 
 }
