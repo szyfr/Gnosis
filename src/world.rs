@@ -7,7 +7,7 @@
 
 //= Imports
 use std::collections::HashMap;
-use crate::{tiles::Tile, graphics::Graphics, raylib::vectors::Vector3};
+use crate::{tiles::{Tile, Gasses, GasStruct}, graphics::Graphics, raylib::vectors::Vector3};
 
 
 //= Structures
@@ -69,16 +69,26 @@ impl World {
 		for x in 0..16 {
 			for y in 0..8 {
 				for z in 0..16 {
+					//let noGas = GasStruct{gas:Gasses::None, amount: 1.0};
+					//if y == 8 { chunk[x][y][z] = Tile::Air { gasses: [GasStruct{gas:Gasses::Air, amount: 1.0},noGas,noGas,noGas] }; }
+					//else { chunk[x][y][z] = Tile::Test; }
 					chunk[x][y][z] = Tile::Test;
 				}
 			}
 		}
 		chunk[0][8][0] = Tile::Test;
 
-		self.chunks.insert([-1, 0,0], Chunk(chunk).clone());
-		self.chunks.insert([ 0, 0,0], Chunk(chunk).clone());
-		self.chunks.insert([ 1, 0,0], Chunk(chunk).clone());
-		self.chunks.insert([ 0,-1,0], Chunk(chunkbody).clone());
+		self.chunks.insert([-1, 0, 0], Chunk(chunk).clone());
+		self.chunks.insert([ 0, 0, 0], Chunk(chunk).clone());
+		self.chunks.insert([ 1, 0, 0], Chunk(chunk).clone());
+		self.chunks.insert([-1, 0,-1], Chunk(chunk).clone());
+		self.chunks.insert([ 0, 0,-1], Chunk(chunk).clone());
+		self.chunks.insert([ 1, 0,-1], Chunk(chunk).clone());
+		self.chunks.insert([-1, 0, 1], Chunk(chunk).clone());
+		self.chunks.insert([ 0, 0, 1], Chunk(chunk).clone());
+		self.chunks.insert([ 1, 0, 1], Chunk(chunk).clone());
+
+		self.chunks.insert([ 0,-1, 0], Chunk(chunkbody).clone());
 	}
 
 }
