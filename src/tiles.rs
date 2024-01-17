@@ -14,20 +14,21 @@ use std::fmt::Display;
 
 /// Tile structure
 #[derive(Clone, Copy, PartialEq)]
+#[repr(align(1))]
 pub enum Tile {
-	Empty,
-	Test,
+	Empty{p:u8},
+	Test{p:u8},
 
 	Air {
-		gas: Gasses,
+	//	gas: Gasses,
 		amount: f32,
 	},
 }
 impl ToString for Tile {
 	fn to_string(&self) -> String {
 		match self {
-			Tile::Empty => return "tile_empty".to_string(),
-			Tile::Test  => return "tile_test".to_string(),
+			Tile::Empty { .. } => return "tile_empty".to_string(),
+			Tile::Test  { .. } => return "tile_test".to_string(),
 
 			//Tile::Air { gasses } => return format!("tile_air_[{},{},{},{}]",gasses[0],gasses[1],gasses[2],gasses[3]),
 			Tile::Air { .. } => return format!("tile_air"),
@@ -69,7 +70,7 @@ impl Display for GasStruct {
 impl Tile {
 
 	pub fn is_empty(self) -> bool {
-		return self == Tile::Empty;
+		return self == Tile::Empty{p:0};
 	}
 	
 	///// Create a new blank tile

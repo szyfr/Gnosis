@@ -63,8 +63,9 @@ impl World {
 	}
 
 	pub fn generate_test(&mut self) {
-		let mut chunk = [[[Tile::Empty;16];16];16];
-		let chunkbody = [[[Tile::Test;16];16];16];
+		print!("Fuck\n");
+		let mut chunk = [[[Tile::Empty{p:0};16];16];16];
+		let chunkbody = [[[Tile::Test{p:0};16];16];16];
 
 		for x in 0..16 {
 			for y in 0..8 {
@@ -72,11 +73,11 @@ impl World {
 					//let noGas = GasStruct{gas:Gasses::None, amount: 1.0};
 					//if y == 8 { chunk[x][y][z] = Tile::Air { gasses: [GasStruct{gas:Gasses::Air, amount: 1.0},noGas,noGas,noGas] }; }
 					//else { chunk[x][y][z] = Tile::Test; }
-					chunk[x][y][z] = Tile::Test;
+					chunk[x][y][z] = Tile::Test{p:0};
 				}
 			}
 		}
-		chunk[0][8][0] = Tile::Test;
+		chunk[0][8][0] = Tile::Test{p:0};
 
 		self.chunks.insert([-1, 0, 0], Chunk(chunk).clone());
 		self.chunks.insert([ 0, 0, 0], Chunk(chunk).clone());
