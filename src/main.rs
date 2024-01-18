@@ -6,7 +6,7 @@
 
 
 //= Imports
-use gnosis::{raylib::{self, vectors::Vector3}, camera::Camera, world::{World, self}, graphics::Graphics};
+use gnosis::{raylib::{self, vectors::Vector3}, camera::Camera, world::World, graphics::Graphics};
 
 
 //= Procedures
@@ -15,7 +15,7 @@ fn main() {
     //* Raylib */
 	//raylib::set_trace_log_level(raylib_ffi::enums::TraceLogLevel::None);
 	raylib::init_window(1280,720,"Gnosis");
-	raylib::set_target_fps(80);
+	//raylib::set_target_fps(80);
 
 	let graphics = Graphics::new();
 	let mut camera = Camera::new();

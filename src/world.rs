@@ -15,12 +15,15 @@ use crate::{tiles::{Tile, Gasses, GasStruct}, graphics::Graphics, raylib::vector
 ///
 pub struct World {
 	pub rotation: i32,
-	pub chunks: HashMap<[i32;3],Chunk>,
+	//pub chunks: HashMap<[i32;3],Chunk>,
+	pub chunks: HashMap<[i32;3],Chunk2>,
 }
 
 ///
 #[derive(Clone)]
 pub struct Chunk([[[Tile;16];16];16]);
+#[derive(Clone)]
+pub struct Chunk2(Vec<Vec<Vec<Tile>>>);
 
 
 //= Procedures
@@ -64,8 +67,26 @@ impl World {
 
 	pub fn generate_test(&mut self) {
 		print!("Fuck\n");
-		let mut chunk = [[[Tile::Empty{p:0};16];16];16];
-		let chunkbody = [[[Tile::Test{p:0};16];16];16];
+		//let mut chunk = [[[Tile::Empty{p:0};16];16];16];
+		//let chunkbody = [[[Tile::Test{p:0};16];16];16];
+		let layer1 = vec![
+			Tile::Empty{p:0},Tile::Empty{p:0},Tile::Empty{p:0},Tile::Empty{p:0},
+			Tile::Empty{p:0},Tile::Empty{p:0},Tile::Empty{p:0},Tile::Empty{p:0},
+			Tile::Empty{p:0},Tile::Empty{p:0},Tile::Empty{p:0},Tile::Empty{p:0},
+			Tile::Empty{p:0},Tile::Empty{p:0},Tile::Empty{p:0},Tile::Empty{p:0},
+		];
+		let layer2 = vec![
+			layer1.clone(),layer1.clone(),layer1.clone(),layer1.clone(),
+			layer1.clone(),layer1.clone(),layer1.clone(),layer1.clone(),
+			layer1.clone(),layer1.clone(),layer1.clone(),layer1.clone(),
+			layer1.clone(),layer1.clone(),layer1.clone(),layer1.clone(),
+		];
+		let mut chunk = vec![
+			layer2.clone(),layer2.clone(),layer2.clone(),layer2.clone(),
+			layer2.clone(),layer2.clone(),layer2.clone(),layer2.clone(),
+			layer2.clone(),layer2.clone(),layer2.clone(),layer2.clone(),
+			layer2.clone(),layer2.clone(),layer2.clone(),layer2.clone(),
+		];
 
 		for x in 0..16 {
 			for y in 0..8 {
@@ -79,22 +100,32 @@ impl World {
 		}
 		chunk[0][8][0] = Tile::Test{p:0};
 
-		self.chunks.insert([-1, 0, 0], Chunk(chunk).clone());
-		self.chunks.insert([ 0, 0, 0], Chunk(chunk).clone());
-		self.chunks.insert([ 1, 0, 0], Chunk(chunk).clone());
-		self.chunks.insert([-1, 0,-1], Chunk(chunk).clone());
-		self.chunks.insert([ 0, 0,-1], Chunk(chunk).clone());
-		self.chunks.insert([ 1, 0,-1], Chunk(chunk).clone());
-		self.chunks.insert([-1, 0, 1], Chunk(chunk).clone());
-		self.chunks.insert([ 0, 0, 1], Chunk(chunk).clone());
-		self.chunks.insert([ 1, 0, 1], Chunk(chunk).clone());
-
-		self.chunks.insert([ 0,-1, 0], Chunk(chunkbody).clone());
+		self.chunks.insert([-1, 0, 0], Chunk2(chunk.clone()).clone());
+		self.chunks.insert([ 0, 0, 0], Chunk2(chunk.clone()).clone());
+		self.chunks.insert([ 1, 0, 0], Chunk2(chunk.clone()).clone());
+		self.chunks.insert([-1, 0,-1], Chunk2(chunk.clone()).clone());
+		self.chunks.insert([ 0, 0,-1], Chunk2(chunk.clone()).clone());
+		self.chunks.insert([ 1, 0,-1], Chunk2(chunk.clone()).clone());
+		self.chunks.insert([-1, 0, 1], Chunk2(chunk.clone()).clone());
+		self.chunks.insert([ 0, 0, 1], Chunk2(chunk.clone()).clone());
+		self.chunks.insert([ 1, 0, 1], Chunk2(chunk.clone()).clone());
 	}
 
 }
 
 impl Chunk {
+
+	pub fn tile_should_draw(&self, position: [i32;3]) -> bool {
+		if position[0] == 15 || position[1] == 15 || position[2] == 15 { return true }
+		return
+			self.0[(position[0]+1) as usize][position[1] as usize][position[2] as usize].is_empty() ||
+			self.0[position[0] as usize][(position[1]+1) as usize][position[2] as usize].is_empty() ||
+			self.0[position[0] as usize][position[1] as usize][(position[2]+1) as usize].is_empty();
+	}
+
+}
+
+impl Chunk2 {
 
 	pub fn tile_should_draw(&self, position: [i32;3]) -> bool {
 		if position[0] == 15 || position[1] == 15 || position[2] == 15 { return true }

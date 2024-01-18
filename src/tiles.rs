@@ -14,13 +14,12 @@ use std::fmt::Display;
 
 /// Tile structure
 #[derive(Clone, Copy, PartialEq)]
-#[repr(align(1))]
 pub enum Tile {
 	Empty{p:u8},
 	Test{p:u8},
 
 	Air {
-	//	gas: Gasses,
+		gas: Gasses,
 		amount: f32,
 	},
 }
