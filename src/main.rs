@@ -6,7 +6,7 @@
 
 
 //= Imports
-use gnosis::{raylib::{self, vectors::Vector3}, camera::Camera, world::World, graphics::Graphics};
+use gnosis::{raylib::{self, vectors::Vector3}, camera::Camera, world::{World, Coords}, graphics::Graphics};
 
 
 //= Procedures
@@ -46,7 +46,7 @@ fn main() {
 
 		raylib::clear_background(raylib_ffi::Color{r:57,g:57,b:57,a:255});
 
-		world.draw(&graphics, Vector3{x:camera.position.x,y:8.0,z:camera.position.y});
+		world.draw(&graphics, Coords{x:camera.position.x as i32,y:8,z:camera.position.y as i32});
 
 		raylib::draw_fps(0, 0);
 

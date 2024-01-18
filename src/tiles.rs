@@ -15,8 +15,8 @@ use std::fmt::Display;
 /// Tile structure
 #[derive(Clone, Copy, PartialEq)]
 pub enum Tile {
-	Empty{p:u8},
-	Test{p:u8},
+	Empty,
+	Test,
 
 	Air {
 		gas: Gasses,
@@ -69,7 +69,16 @@ impl Display for GasStruct {
 impl Tile {
 
 	pub fn is_empty(self) -> bool {
-		return self == Tile::Empty{p:0};
+		return self == Tile::Empty;
+	}
+
+	pub fn is_clear(self) -> bool {
+		match self {
+			Tile::Empty => true,
+			Tile::Test  => false,
+			// TODO Do more with the amount
+			Tile::Air { gas, amount } => true,
+		}
 	}
 	
 	///// Create a new blank tile
