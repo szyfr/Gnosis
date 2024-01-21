@@ -6,7 +6,7 @@
 
 
 //= Imports
-use gnosis::{raylib, camera::Camera, world::{chunks::World, Coords}, graphics::Graphics};
+use gnosis::{raylib, camera::Camera, world::{chunks::World, Coords, tiles::{Tile, TileType}}, graphics::Graphics, player::Player};
 
 
 //= Procedures
@@ -20,29 +20,22 @@ fn main() {
 	let graphics = Graphics::new();
 	let mut camera = Camera::new();
 	let mut world = World::new();
+	let mut player = Player::new();
 	world.generate_test();
 
 	while !raylib::window_should_close() {
 		//* Update */
-		if raylib::button_down(raylib_ffi::enums::KeyboardKey::D as i32) {
-			camera.position.x += 1.0;
-		}
-		if raylib::button_down(raylib_ffi::enums::KeyboardKey::A as i32) {
-			camera.position.x -= 1.0;
-		}
-		if raylib::button_down(raylib_ffi::enums::KeyboardKey::W as i32) {
-			camera.position.y -= 1.0;
-		}
-		if raylib::button_down(raylib_ffi::enums::KeyboardKey::S as i32) {
-			camera.position.y += 1.0;
-		}
+		player.update();
+
+		camera.update(player.get_position());
 
 		//* Draw */
 		camera.begin_drawing();
 
 		raylib::clear_background(raylib_ffi::Color{r:57,g:57,b:57,a:255});
 
-		world.draw(&graphics, Coords{x:camera.position.x as i32,y:8,z:camera.position.y as i32});
+		world.draw(&graphics, Coords::from(player.get_position()), camera.zoom);
+		graphics.draw_tile_V(Tile{block:TileType::Test, draw:true}, player.get_position());
 
 		raylib::draw_fps(0, 0);
 

@@ -5,6 +5,8 @@
 #![allow(dead_code)]
 
 
+use raylib_ffi::Color;
+
 //= Imports
 use super::{enums, vectors::Vector2, rectangles::Rectangle, images::Image};
 
@@ -122,11 +124,9 @@ impl Texture {
 
 	//= Drawing
 	/// Draw texture using raylib_ffi::DrawTexture
-	pub fn draw(&self, posX: i32, posY: i32) -> Self {
+	pub fn draw(&self, posX: i32, posY: i32, tint: Color) {
 		unsafe {
-			raylib_ffi::DrawTexture(self.clone().into(), posX, posY, self.tint);
-
-			return self.clone();
+			raylib_ffi::DrawTexture(self.clone().into(), posX, posY, tint);
 		}
 	}
 	/// Draw texture using raylib_ffi::DrawTextureV

@@ -17,7 +17,7 @@ pub enum TileType {
 	Test,
 
 	Air {
-
+		test: f32,
 	},
 }
 impl ToString for TileType {

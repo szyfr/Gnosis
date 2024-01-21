@@ -27,13 +27,23 @@ impl Sub for Vector2 {
 		}
 	}
 }
-impl Add for Vector2 {
+impl Add<Vector2> for Vector2 {
 	type Output = Self;
 
 	fn add(self, rhs: Self) -> Self::Output {
 		Self {
 			x: self.x + rhs.x,
 			y: self.y + rhs.y,
+		}
+	}
+}
+impl Add<f32> for Vector2 {
+	type Output = Self;
+
+	fn add(self, rhs: f32) -> Self::Output {
+		Self {
+			x: self.x + rhs,
+			y: self.y + rhs,
 		}
 	}
 }
@@ -110,7 +120,7 @@ impl Sub for Vector3 {
 		}
 	}
 }
-impl Add for Vector3 {
+impl Add<Vector3> for Vector3 {
 	type Output = Self;
 
 	fn add(self, rhs: Self) -> Self::Output {
@@ -118,6 +128,17 @@ impl Add for Vector3 {
 			x: self.x + rhs.x,
 			y: self.y + rhs.y,
 			z: self.z + rhs.z,
+		}
+	}
+}
+impl Add<f32> for Vector3 {
+	type Output = Self;
+
+	fn add(self, rhs: f32) -> Self::Output {
+		Self {
+			x: self.x + rhs,
+			y: self.y + rhs,
+			z: self.z + rhs,
 		}
 	}
 }
@@ -176,9 +197,15 @@ impl Into<[i32;3]> for Vector3 {
 }
 impl Into<[f32;3]> for Vector3 {
 	fn into(self) -> [f32;3] {
-		return [self.x, self.y, self.z];
+		[self.x, self.y, self.z]
 	}
 }
+impl Into<Vector2> for Vector3 {
+	fn into(self) -> Vector2 {
+		Vector2 { x: self.x, y: self.y }
+	}
+}
+
 
 /// Vector4 type
 #[derive(Copy, Clone)]

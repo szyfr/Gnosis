@@ -9,7 +9,9 @@
 pub mod tiles;
 pub mod chunks;
 
-use std::ops::{Add, Div, Rem, Mul};
+use std::{ops::{Add, Div, Rem, Mul}, fmt::Display};
+
+use crate::raylib::vectors::Vector3;
 
 
 //= Structures
@@ -65,6 +67,17 @@ impl Div<i32> for Coords {
 		}
 	}
 }
+impl Div<[usize;3]> for Coords {
+	type Output = Coords;
+
+	fn div(self, rhs: [usize;3]) -> Self::Output {
+		Coords{
+			x: self.x / rhs[0] as i32,
+			y: self.y / rhs[1] as i32,
+			z: self.z / rhs[2] as i32,
+		}
+	}
+}
 impl Rem<i32> for Coords {
 	type Output = Coords;
 
@@ -73,6 +86,17 @@ impl Rem<i32> for Coords {
 			x: self.x % rhs,
 			y: self.y % rhs,
 			z: self.z % rhs,
+		}
+	}
+}
+impl Rem<[usize;3]> for Coords {
+	type Output = Coords;
+
+	fn rem(self, rhs: [usize;3]) -> Self::Output {
+		Coords{
+			x: self.x % rhs[0] as i32,
+			y: self.y % rhs[1] as i32,
+			z: self.z % rhs[2] as i32,
 		}
 	}
 }
@@ -85,6 +109,41 @@ impl Mul<i32> for Coords {
 			y: self.y * rhs,
 			z: self.z * rhs,
 		}
+	}
+}
+impl Mul<[usize;3]> for Coords {
+	type Output = Coords;
+
+	fn mul(self, rhs: [usize;3]) -> Self::Output {
+		Coords{
+			x: self.x * rhs[0] as i32,
+			y: self.y * rhs[1] as i32,
+			z: self.z * rhs[2] as i32,
+		}
+	}
+}
+impl Into<[usize;3]> for Coords {
+	fn into(self) -> [usize;3] {
+		[self.x as usize, self.y as usize, self.z as usize]
+	}
+}
+impl Into<Vector3> for Coords {
+	fn into(self) -> Vector3 {
+		Vector3{x:self.x as f32, y:self.y as f32, z:self.z as f32}
+	}
+}
+impl From<Vector3> for Coords {
+	fn from(value: Vector3) -> Self {
+		Self {
+			x: value.x as i32,
+			y: value.y as i32,
+			z: value.z as i32,
+		}
+	}
+}
+impl Display for Coords {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "[{},{},{}]", self.x,self.y,self.z)
 	}
 }
 

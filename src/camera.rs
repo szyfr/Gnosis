@@ -6,7 +6,7 @@
 
 
 //= Imports
-use crate::raylib::vectors::Vector2;
+use crate::raylib::vectors::{Vector2, Vector3};
 
 
 //= Structures
@@ -35,8 +35,24 @@ impl Camera {
 	pub fn new() -> Self {
 		Self {
 			position: Vector2::zero(),
-			zoom: 4.0,
+			zoom: 2.0,
 		}
+	}
+
+	pub fn update(&mut self, position: Vector3) {
+		let mut cameraPosi = Vector2{
+			x: (position.x * 16.0) - (position.z * 16.0),
+			y: (position.x *  8.0) + (position.z *  8.0) - (position.y * 16.0),
+		};
+
+		unsafe {
+			cameraPosi = (cameraPosi + 16.0) - Vector2{
+				x:raylib_ffi::GetScreenWidth() as f32 / (self.zoom * 2.0),
+				y:raylib_ffi::GetScreenHeight() as f32 / (self.zoom * 2.0),
+			};
+		}
+
+		self.position = cameraPosi;
 	}
 
 	/// Begin drawing using raylib_ffi::BeginMode3D
@@ -46,6 +62,7 @@ impl Camera {
 			raylib_ffi::BeginMode2D((*self).into());
 		}
 	}
+
 	/// End drawing using raylib_ffi::EndMode3D
 	pub fn end_drawing(&self) {
 		unsafe {
