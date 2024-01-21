@@ -7,7 +7,7 @@
 
 //= Imports
 use std::collections::HashMap;
-use crate::{raylib::textures::Texture, tiles::Tile, world::Coords};
+use crate::{raylib::textures::Texture, world::tiles::Tile, world::Coords};
 
 
 //= Structures
@@ -33,30 +33,12 @@ impl Graphics {
 		}
 	}
 
-	//
-	pub fn draw_tile(&self, tile: Tile, position: Coords, _rotation: i32) {
-		self.textures[&tile.to_string()].draw(
+	/// Draw Tile to screen
+	pub fn draw_tile(&self, tile: Tile, position: Coords) {
+		self.textures[&tile.block.to_string()].draw(
 			(position.x * 16) - (position.z * 16),
 			(position.x *  8) + (position.z *  8) - (position.y * 16),
 		);
-		//*! All of this is testing rotating the camera
-		//*! It doesn't work yet
-		//match rotation {
-		//	1 => {
-		//		self.textures[&tile.to_string()].draw(
-		//			(position[2] * 16) - (position[0] * 16),
-		//			(position[2] *  8) + (position[0] *  8) - (position[1] * 16),
-		//		);
-		//	}
-		//	2 => {}
-		//	3 => {}
-		//	_ => {
-		//		self.textures[&tile.to_string()].draw(
-		//			(position[0] * 16) - (position[2] * 16),
-		//			(position[0] *  8) + (position[2] *  8) - (position[1] * 16),
-		//		);
-		//	}
-		//}
 	}
 
 }
