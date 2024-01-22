@@ -26,7 +26,6 @@ fn main() {
 	while !raylib::window_should_close() {
 		//* Update */
 		player.update();
-
 		camera.update(player.get_position());
 
 		//* Draw */
@@ -34,9 +33,12 @@ fn main() {
 
 		raylib::clear_background(raylib_ffi::Color{r:57,g:57,b:57,a:255});
 
-		world.draw(&graphics, Coords::from(player.get_position()), camera.zoom);
+		world.draw(&graphics, Coords::from(player.get_position()));
 		graphics.draw_tile_V(Tile{block:TileType::Test, draw:true}, player.get_position());
 
+		camera.end_mode_2D();
+
+		//* UI */
 		raylib::draw_fps(0, 0);
 
 		camera.end_drawing();

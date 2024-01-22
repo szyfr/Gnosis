@@ -5,6 +5,8 @@
 #![allow(dead_code)]
 
 
+use std::thread;
+
 //= Imports
 use crate::{units::Unit, raylib::{vectors::Vector3, self}};
 
@@ -30,33 +32,42 @@ impl Player {
 
 	/// Update Player
 	pub fn update(&mut self) {
-		let up    = raylib::button_down(raylib_ffi::enums::KeyboardKey::W as i32);
-		let down  = raylib::button_down(raylib_ffi::enums::KeyboardKey::S as i32);
-		let left  = raylib::button_down(raylib_ffi::enums::KeyboardKey::A as i32);
-		let right = raylib::button_down(raylib_ffi::enums::KeyboardKey::D as i32);
-		if up {
-			if right { self.unit.position.z += 0.025; }
-			if left  { self.unit.position.x += 0.025; }
-			self.unit.position.x -= 0.05;
-			self.unit.position.z -= 0.05;
-		}
-		if down {
-			if right { self.unit.position.x -= 0.025; }
-			if left  { self.unit.position.z -= 0.025; }
-			self.unit.position.x += 0.05;
-			self.unit.position.z += 0.05;
-		}
-		if left {
-			self.unit.position.x -= 0.05;
-			self.unit.position.z += 0.05;
-		}
-		if right {
-			self.unit.position.x += 0.05;
-			self.unit.position.z -= 0.05;
-		}
-		if raylib::button_pressed(raylib_ffi::enums::KeyboardKey::O as i32) {
-			print!("{}\n",self.unit.position);
-		}
+		//* Movement */
+		let movementThread = thread::spawn(|| {
+			let up    = raylib::button_down(raylib_ffi::enums::KeyboardKey::W as i32);
+			let down  = raylib::button_down(raylib_ffi::enums::KeyboardKey::S as i32);
+			let left  = raylib::button_down(raylib_ffi::enums::KeyboardKey::A as i32);
+			let right = raylib::button_down(raylib_ffi::enums::KeyboardKey::D as i32);
+			let mut offset = Vector3::zero();
+			if up {
+				if right { offset.z += 0.025; }
+				if left  { offset.x += 0.025; }
+				offset.x -= 0.05;
+				offset.z -= 0.05;
+			}
+			if down {
+				if right { offset.x -= 0.025; }
+				if left  { offset.z -= 0.025; }
+				offset.x += 0.05;
+				offset.z += 0.05;
+			}
+			if left {
+				offset.x -= 0.05;
+				offset.z += 0.05;
+			}
+			if right {
+				offset.x += 0.05;
+				offset.z -= 0.05;
+			}
+
+			offset
+		});
+
+		self.unit.position += movementThread.join().unwrap();
+		
+		//if raylib::button_pressed(raylib_ffi::enums::KeyboardKey::O as i32) {
+		//	print!("{}\n",self.unit.position);
+		//}
 	}
 
 	/// Get current position

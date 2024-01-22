@@ -7,7 +7,7 @@
 
 //= Imports
 use std::collections::HashMap;
-use crate::{world::{Coords, tiles::{Tile, TileType}}, graphics::{Graphics, self}};
+use crate::{world::{Coords, tiles::{Tile, TileType}}, graphics::Graphics};
 
 
 //= Structures / Enumeration
@@ -94,16 +94,22 @@ impl World {
 	}
 
 	/// Draw each tile and entity
-	pub fn draw(&self, graphics: &Graphics, position: Coords, zoom: f32) {
+	pub fn draw(&self, graphics: &Graphics, position: Coords) {
 		let currentChunk = position / [16,8,16];
 
 		//* See if chunk exists and if so, draw it */
 		for chunkx in (currentChunk.x - 3)..(currentChunk.x + 3) {
 			for chunkz in (currentChunk.z - 3)..(currentChunk.z + 3) {
 				for chunky in (currentChunk.y - 4)..=(currentChunk.y) {
+					if (chunkx == currentChunk.x - 3 || chunkx == currentChunk.x + 2 ) && (chunkz == currentChunk.z - 3 || chunkz == currentChunk.z + 2 ) { continue }
 					let chunkPos = Coords{x:chunkx,y:chunky,z:chunkz};
 					if self.chunks.contains_key(&chunkPos) {
 						//* Draw chunk */
+						//let chunk = self.chunks[&chunkPos].clone();
+						//let graphic = graphics.clone();
+						//thread::spawn(move || {
+						//	chunk.draw(&graphic, chunkPos);
+						//});
 						self.chunks[&chunkPos].draw(graphics, chunkPos);
 					}
 				}

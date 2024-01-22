@@ -6,7 +6,7 @@
 
 
 //= Imports
-use std::{ops::{Sub, Add, Mul}, fmt::Display};
+use std::{ops::{Add, AddAssign, Mul, Sub}, fmt::Display};
 
 
 //= Structures
@@ -140,6 +140,13 @@ impl Add<f32> for Vector3 {
 			y: self.y + rhs,
 			z: self.z + rhs,
 		}
+	}
+}
+impl AddAssign<Vector3> for Vector3 {
+	fn add_assign(&mut self, rhs: Vector3) {
+		self.x += rhs.x;
+		self.y += rhs.y;
+		self.z += rhs.z;
 	}
 }
 impl Mul<f32> for Vector3 {
