@@ -6,7 +6,7 @@
 
 
 //= Imports
-use crate::raylib::vectors::{Vector2, Vector3};
+use crate::{raylib::vectors::{Vector2, Vector3}, world::Coords};
 
 
 //= Structures
@@ -38,6 +38,7 @@ impl Camera {
 		unsafe { Self {
 			position: Vector2::zero(),
 			zoom: 2.0,
+			//zoom: 1.0,
 			//zoom: 0.5,
 
 			screenSize: Vector2{
@@ -75,6 +76,28 @@ impl Camera {
 	pub fn end_drawing(&self) {
 		unsafe {
 			raylib_ffi::EndDrawing();
+		}
+	}
+
+	pub fn get_screen_to_world(self, position: Vector2) -> Coords {
+		unsafe {
+			let rlCall = raylib_ffi::GetScreenToWorld2D(position.into(), self.into());
+			Coords {
+				x: rlCall.x as i32,
+				y: 0,
+				z: rlCall.y as i32,
+			}
+		}
+	}
+
+	pub fn get_world_to_screen(self, position: Vector2) -> Coords {
+		unsafe {
+			let rlCall = raylib_ffi::GetWorldToScreen2D(position.into(), self.into());
+			Coords{
+				x: rlCall.x as i32,
+				y: rlCall.y as i32,
+				z: 0,
+			}
 		}
 	}
 

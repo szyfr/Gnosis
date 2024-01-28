@@ -26,7 +26,8 @@ impl Player {
 	/// Create new player
 	pub fn new() -> Self {
 		Self {
-			unit: Unit::new_vec(Vector3{x:17.0,y:8.0,z:17.0}),
+			//unit: Unit::new_vec(Vector3{x:17.0,y:8.0,z:17.0}),
+			unit: Unit::new_vec(Vector3{x:0.0,y:8.0,z:0.0}),
 		}
 	}
 

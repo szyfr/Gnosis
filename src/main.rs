@@ -33,7 +33,7 @@ fn main() {
 
 		raylib::clear_background(raylib_ffi::Color{r:57,g:57,b:57,a:255});
 
-		world.draw(&graphics, Coords::from(player.get_position()));
+		world.draw(&graphics, Coords::from(player.get_position()), camera);
 		graphics.draw_tile_V(Tile{block:TileType::Test, draw:true}, player.get_position());
 
 		camera.end_mode_2D();

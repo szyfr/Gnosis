@@ -149,3 +149,7 @@ impl Display for Coords {
 
 
 //= Procedures
+
+impl Coords {
+	
+}
